@@ -38,7 +38,7 @@ define('INFRACTIONS', true);
 require(join(DIRECTORY_SEPARATOR, array(ROOT_PATH, 'modules', 'Infractions', 'config.php')));
 
 // Initialise infractions language
-$infractions_language = new Language('modules/Infractions/language', LANGUAGE);
+$infractions_language = new Language(ROOT_PATH . '/modules/Infractions/language', LANGUAGE);
 
 // Define URLs which belong to this module
 $pages->add('Infractions', '/admin/infractions', 'pages/admin/infractions.php');
