@@ -2,7 +2,7 @@
 /*
  *	Made by Samerton
  *  https://github.com/samerton/Nameless-Infractions
- *  NamelessMC version 2.0.0-pr2
+ *  NamelessMC version 2.0.0-pr3
  *
  *  License: MIT
  *
@@ -41,9 +41,9 @@ require(join(DIRECTORY_SEPARATOR, array(ROOT_PATH, 'modules', 'Infractions', 'co
 $infractions_language = new Language(ROOT_PATH . '/modules/Infractions/language', LANGUAGE);
 
 // Define URLs which belong to this module
-$pages->add('Infractions', '/admin/infractions', 'pages/admin/infractions.php');
+$pages->add('Infractions', '/admin/infractions', 'pages/admin.php');
 $pages->add('Infractions', '/infractions', 'pages/infractions.php');
-$pages->add('Infractions', '/mod/infractions', 'pages/mod/infractions.php');
+$pages->add('Infractions', '/mod/infractions', 'pages/mod.php');
 
 // Autoloader
 spl_autoload_register(function($class) {
