@@ -1,8 +1,8 @@
 <?php
 /*
- *	Made by Samerton
+ *	Made by Samerton and Partydragen
  *  https://github.com/samerton/Nameless-Infractions
- *  NamelessMC version 2.0.0-pr3
+ *  NamelessMC version 2.0.0-pr6
  *
  *  License: MIT
  *
@@ -11,6 +11,8 @@
 
 // Always define page name
 define('PAGE', 'infractions');
+$page_title = $infractions_language->get('infractions', 'infractions');
+require_once(ROOT_PATH . '/core/templates/frontend_init.php');
 
 // Get page
 if(isset($_GET['p'])){
@@ -22,33 +24,25 @@ if(isset($_GET['p'])){
 
 $timeago = new Timeago(TIMEZONE);
 
-require(ROOT_PATH . '/core/integration/uuid.php');
+if(!file_exists(ROOT_PATH . '/modules/Infractions/config.php')){
+	die('Please configure the Infractions module in the StaffCP first!');
+}
 require(ROOT_PATH . '/modules/Infractions/config.php');
-
-$inf_plugin = 'bat';
-$infractions = new LiteBans($inf_db, $infractions_language);
-?>
-<!DOCTYPE html>
-<html lang="<?php echo (defined('HTML_LANG') ? HTML_LANG : 'en'); ?>">
-<head>
-    <!-- Standard Meta -->
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-
-    <!-- Site Properties -->
-    <?php
-    define('DESCRIPTION', 'Viewing page ' . $p . ' of latest infractions on ' . SITE_NAME . '.');
-
-    $title = $infractions_language->get('infractions', 'infractions');
-    require(ROOT_PATH . '/core/templates/header.php');
-    ?>
-
-</head>
-<body>
-<?php
-require(ROOT_PATH . '/core/templates/navbar.php');
-require(ROOT_PATH . '/core/templates/footer.php');
+if(!isset($inf_db)) {
+	die('Please configure the Infractions module in the StaffCP first!');
+}
+require(ROOT_PATH . '/core/integration/uuid.php');
+require_once(ROOT_PATH . '/modules/Infractions/classes/Infractions.php');
+switch($inf_config['plugin']) {
+	case 'litebans':
+		// Litebans integration
+		require_once(ROOT_PATH . '/modules/Infractions/classes/LiteBans.php');
+		$infractions = new LiteBans($inf_db, $infractions_language);
+	break;
+	default:
+		die('Plugin not supported!');
+	break;
+}
 
 if(!isset($_GET['view']) && !isset($_GET['id'])){
     $infractions_list = $infractions->listInfractions();
@@ -67,7 +61,7 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
         foreach($results->data as $result){
             // Check if the user exists
             if(!isset($users_array[$result->name])){
-                $query_user = new User($result->name);
+                $query_user = new User($result->name, 'username');
                 if($query_user->exists()){
                     $users_array[$result->name] = array(
                         'profile' => URL::build('/profile/' . Output::getClean($result->name)),
@@ -83,7 +77,7 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
                 }
             }
             if(!isset($users_array[$result->banned_by_name])){
-                $query_user = new User($result->banned_by_name);
+                $query_user = new User($result->banned_by_name, 'username');
                 if($query_user->exists()){
                     $users_array[$result->banned_by_name] = array(
                         'profile' => URL::build('/profile/' . Output::getClean($result->banned_by_name)),
@@ -210,16 +204,25 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
             'NO_INFRACTIONS' => $infractions_language->get('infractions', 'no_infractions')
         ));
 
-    $smarty->display(ROOT_PATH . '/custom/templates/' . TEMPLATE . '/infractions/infractions.tpl');
-
-    //echo '<pre>', print_r($infractions_list), '</pre>';
+    $template_file = 'infractions/infractions.tpl';
 } else if(isset($_GET['view'])) {
 
 } else if(isset($_GET['id'])) {
 
 }
 
-require(ROOT_PATH . '/core/templates/scripts.php'); ?>
+// Load modules + template
+Module::loadPage($user, $pages, $cache, $smarty, array($navigation, $cc_nav, $mod_nav), $widgets);
 
-</body>
-</html>
+$page_load = microtime(true) - $start;
+define('PAGE_LOAD_TIME', str_replace('{x}', round($page_load, 3), $language->get('general', 'page_loaded_in')));
+
+$template->onPageLoad();
+	
+$smarty->assign('WIDGETS', $widgets->getWidgets());
+	
+require(ROOT_PATH . '/core/templates/navbar.php');
+require(ROOT_PATH . '/core/templates/footer.php');
+	
+// Display template
+$template->displayTemplate($template_file, $smarty);
