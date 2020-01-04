@@ -1,4 +1,16 @@
 # Nameless-Infractions
-Infractions module for Nameless 2
+The Infractions module for Nameless v2 allows you to display a list of ingame punishments on your website.
 
-**This module is in development, and is not yet ready for use.**
+### Supported Plugins
+- LiteBans
+
+If you would like to request plugin support, please open an issue on [GitHub](https://github.com/samerton/Nameless-Infractions/issues).
+
+### Requirements
+- NamelessMC version 2 (from commit [6b6222c](https://github.com/NamelessMC/Nameless/commit/6b6222c020ddea84fe9e653b5715b6f8fda8c1b4) or pre-release 7 onwards)
+- One of the previously mentioned supported plugins installed and configured to use MySQL
+
+### Installation
+- Upload the contents of the **upload** directory straight into your NamelessMC installation's directory
+- Activate the module in the StaffCP -> Modules tab
+- Configure your Infractions plugin information in the StaffCP -> Infractions tab
