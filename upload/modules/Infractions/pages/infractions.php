@@ -39,6 +39,11 @@ switch($inf_config['plugin']) {
 		require_once(ROOT_PATH . '/modules/Infractions/classes/LiteBans.php');
 		$infractions = new LiteBans($inf_db, $infractions_language);
 	break;
+	case 'advancedban':
+		// AdvancedBan integration
+		require_once(ROOT_PATH . '/modules/Infractions/classes/AdvancedBan.php');
+		$infractions = new AdvancedBan($inf_db, $infractions_language);
+		break;
 	default:
 		die('Plugin not supported!');
 	break;

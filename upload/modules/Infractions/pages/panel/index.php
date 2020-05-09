@@ -22,7 +22,7 @@ if($user->isLoggedIn()){
 		die();
 	} else {
 		if(!$user->hasPermission('admincp.infractions.settings')){
-			require_once(ROOT_PATH . '/404.php');
+			require_once(ROOT_PATH . '/403.php');
 			die();
 		}
 	}
@@ -149,6 +149,18 @@ if(isset($errors) && count($errors))
 		'ERRORS_TITLE' => $language->get('general', 'error')
 	));
 
+// Plugin options
+$plugin_options = array(
+	array(
+		'name' => 'LiteBans',
+		'value' => 'litebans'
+	),
+	array(
+		'name' => 'AdvancedBan',
+		'value' => 'advancedban'
+	)
+);
+
 $smarty->assign(array(
 	'PARENT_PAGE' => PARENT_PAGE,
 	'PAGE' => PANEL_PAGE,
@@ -158,6 +170,7 @@ $smarty->assign(array(
 	'DATABASE_SETTINGS' => $infractions_language->get('infractions', 'database_settings'),
 	'PLUGIN' => $infractions_language->get('infractions', 'plugin'),
 	'PLUGIN_VALUE' => (!empty($inf_config['plugin']) ? Output::getClean($inf_config['plugin']) : 'litebans'),
+	'PLUGIN_OPTIONS' => $plugin_options,
 	'LINK_LOCATION' => $infractions_language->get('infractions', 'link_location'),
 	'LINK_LOCATION_VALUE' => $link_location,
 	'LINK_NAVBAR' => $language->get('admin', 'page_link_navbar'),
@@ -173,7 +186,6 @@ $smarty->assign(array(
 	'PORT' => $infractions_language->get('infractions', 'database_port'),
 	'PORT_VALUE' => (!empty($inf_db['port']) ? Output::getClean($inf_db['port']) : '3306'),
 	'PASSWORD' => $infractions_language->get('infractions', 'database_password'),
-	'INFO' => $language->get('general', 'info'),
 	'PASSWORD_HIDDEN' => $language->get('admin', 'email_password_hidden'),
 	'TOKEN' => Token::get(),
 	'SUBMIT' => $language->get('general', 'submit')

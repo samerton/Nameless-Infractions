@@ -2,6 +2,7 @@
 The Infractions module for Nameless v2 allows you to display a list of ingame punishments on your website.
 
 ### Supported Plugins
+- AdvancedBan
 - LiteBans
 
 If you would like to request plugin support, please open an issue on [GitHub](https://github.com/samerton/Nameless-Infractions/issues).

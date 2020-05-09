@@ -81,10 +81,12 @@
 							<div class="form-group">
 								<label for="inputPlugin">{$PLUGIN}</label>
 								<select class="form-control" id="inputPlugin" name="plugin">
-									<option value="litebans"{if $PLUGIN_VALUE eq litebans} selected{/if}>LiteBans</option>
+                                    {foreach from=$PLUGIN_OPTIONS item=item}
+                                        <option value="{$item.value}"{if $PLUGIN_VALUE eq $item.value} selected{/if}>{$item.name}</option>
+                                    {/foreach}
 								</select>
 							</div>
-							<hr>
+							<hr />
 							<strong>{$DATABASE_SETTINGS}</strong>
 							<div class="form-group">
 								<label for="inputHost">{$ADDRESS}</label>

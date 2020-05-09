@@ -62,7 +62,7 @@
 								<span class="ui label">{$infraction.action}</span>
                             {/if}
 
-                            {if $infraction.action_id eq 1 OR $infraction.action_id eq 3}
+                            {if $infraction.action_id lte 4}
                                 {if $infraction.revoked == 1}
 									<span data-toggle="tooltip" title="{$infraction.expires_full}" class="badge badge-success">{$infraction.revoked_full}</span>
                                 {else}
