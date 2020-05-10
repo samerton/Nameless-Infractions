@@ -118,16 +118,20 @@ class AdvancedBan extends Infractions {
 	private function mapType($type){
     	switch($type){
 		    case 'BAN':
+		    case 'TEMP_BAN':
 		    case 'IP_BAN':
+		    case 'TEMP_IP_BAN':
 		    	return 'ban';
 
 		    case 'KICK':
 		    	return 'kick';
 
 		    case 'MUTE':
+		    case 'TEMP_MUTE':
 		    	return 'mute';
 
 		    case 'WARNING':
+		    case 'TEMP_WARNING':
 		    	return 'warning';
 	    }
 

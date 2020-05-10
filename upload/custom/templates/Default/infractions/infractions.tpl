@@ -59,10 +59,10 @@
                             {elseif $infraction.action_id == 6}
 								<span class="badge badge-secondary">{$infraction.action}</span>
                             {else}
-								<span class="ui label">{$infraction.action}</span>
+								<span class="badge badge-default">{$infraction.action}</span>
                             {/if}
 
-                            {if $infraction.action_id lte 4}
+                            {if $infraction.action_id lte 4 || $infraction.action_id eq 6}
                                 {if $infraction.revoked == 1}
 									<span data-toggle="tooltip" title="{$infraction.expires_full}" class="badge badge-success">{$infraction.revoked_full}</span>
                                 {else}

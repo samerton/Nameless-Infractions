@@ -35,18 +35,18 @@
 						<td><span data-toggle="tooltip" title="{$infraction.issued_full}">{$infraction.issued}</span></td>
 						<td>
                             {if $infraction.action_id == 1 || $infraction.action_id == 2}
-								<span class="badge badge-danger">{$infraction.action}</span>
+								<span class="ui red label">{$infraction.action}</span>
                             {elseif $infraction.action_id == 3 || $infraction.action_id == 4}
-								<span class="badge badge-warning">{$infraction.action}</span>
+								<span class="ui yellow label">{$infraction.action}</span>
                             {elseif $infraction.action_id == 5}
-								<span class="badge badge-warning">{$infraction.action}</span>
+								<span class="ui yellow label">{$infraction.action}</span>
                             {elseif $infraction.action_id == 6}
-								<span class="badge badge-secondary">{$infraction.action}</span>
+								<span class="ui grey label">{$infraction.action}</span>
                             {else}
 								<span class="ui label">{$infraction.action}</span>
                             {/if}
 
-                            {if $infraction.action_id lte 4}
+                            {if $infraction.action_id lte 4 || $infraction.action_id eq 6}
                                 {if $infraction.revoked == 1}
 									<span data-toggle="tooltip" title="{$infraction.expires_full}" class="badge badge-success">{$infraction.revoked_full}</span>
                                 {else}
