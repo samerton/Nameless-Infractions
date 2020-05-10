@@ -9,6 +9,10 @@
  *  Infractions page
  */
 
+if (!$user->isLoggedIn() || !$user->hasPermission('admincp.infractions.view') && !$user->data()->id != 1) {
+    Redirect::to(URL::build('/'));
+	die();
+}
 // Always define page name
 define('PAGE', 'infractions');
 $page_title = $infractions_language->get('infractions', 'infractions');
