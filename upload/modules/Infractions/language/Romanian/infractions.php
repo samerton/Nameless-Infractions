@@ -32,7 +32,9 @@ $language = array(
     'active' => 'Activ',
     'no_infractions' => 'Nu s-au găsit infracțiuni.',
     'unknown' => 'Necunoscut',
-	
+    'view_infractions' => 'View Infractions',
+    'guests_view' => 'Guests view Infractions?',
+
     /*
      *  Staff Panel
      */

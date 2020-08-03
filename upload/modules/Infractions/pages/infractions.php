@@ -9,6 +9,26 @@
  *  Infractions page
  */
 
+// Can the user view the panel?
+if ($user->isLoggedIn()) {
+    if (!$user->hasPermission('infractions.view')) {
+        require_once(ROOT_PATH . '/404.php');
+        die();
+    }
+} else {
+    $cache->setCache('infractions_module_cache');
+    if (!$cache->isCached('guests_view')){
+        $guests_view = 0;
+        $cache->store('guests_view', 0);
+    } else {
+        $guests_view = $cache->retrieve('guests_view');
+    }
+    if (!$guests_view) {
+        require_once(ROOT_PATH . '/404.php');
+        die();
+    }
+}
+
 // Always define page name
 define('PAGE', 'infractions');
 $page_title = $infractions_language->get('infractions', 'infractions');

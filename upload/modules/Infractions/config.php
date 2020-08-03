@@ -6,3 +6,6 @@ $inf_db = array(
 	'password' => '',
 	'prefix' => ''
 );
+$inf_config = array(
+	'guests_view' => '1',
+);
