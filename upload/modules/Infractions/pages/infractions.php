@@ -72,8 +72,8 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
                 if($query_user->exists()){
                     $users_array[$result->name] = array(
                         'profile' => URL::build('/profile/' . Output::getClean($result->name)),
-                        'style' => $user->getGroupClass($query_user->data()->id),
-                        'avatar' => $user->getAvatar($query_user->data()->id)
+                        'style' => $query_user->getGroupClass(),
+                        'avatar' => $query_user->getAvatar()
                     );
                 } else {
                     $users_array[$result->name] = array(
@@ -88,8 +88,8 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
                 if($query_user->exists()){
                     $users_array[$result->banned_by_name] = array(
                         'profile' => URL::build('/profile/' . Output::getClean($result->banned_by_name)),
-                        'style' => $user->getGroupClass($query_user->data()->id),
-                        'avatar' => $user->getAvatar($query_user->data()->id)
+                        'style' => $query_user->getGroupClass(),
+                        'avatar' => $query_user->getAvatar()
                     );
                 } else {
                     $users_array[$result->banned_by_name] = array(
@@ -104,8 +104,8 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
                 if($query_user->exists()){
                     $users_array[$result->removed_by_name] = array(
                         'profile' => URL::build('/profile/' . Output::getClean($result->removed_by_name)),
-                        'style' => $user->getGroupClass($query_user->data()->id),
-                        'avatar' => $user->getAvatar($query_user->data()->id)
+                        'style' => $query_user->getGroupClass(),
+                        'avatar' => $query_user->getAvatar()
                     );
                 } else {
                     $users_array[$result->removed_by_name] = array(
@@ -197,7 +197,7 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
             'INFRACTIONS' => $infractions_language->get('infractions', 'infractions'),
             'INFRACTIONS_LIST' => $infractions_array,
             'SEARCH' => $infractions_language->get('infractions', 'search'),
-            'TOKEN' => Token::generate(),
+            'TOKEN' => Token::get(),
             'USERNAME' => $infractions_language->get('infractions', 'username'),
             'STAFF_MEMBER' => $infractions_language->get('infractions', 'staff_member'),
             'ACTION' => $infractions_language->get('infractions', 'action'),
