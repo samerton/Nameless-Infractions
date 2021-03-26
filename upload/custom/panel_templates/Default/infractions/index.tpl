@@ -42,7 +42,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="inputGuestsView">{$GUESTS_VIEW}</label>
-                                <input id="guests_view" name="guests_view" type="checkbox" value="1"{if $GUESTS_VIEW_VALUE eq 1} checked{/if} />
+                                <input id="inputGuestsView" name="guests_view" type="checkbox" value="1"{if $GUESTS_VIEW_VALUE eq 1} checked{/if} />
                             </div>
                             <hr />
                             <strong>{$DATABASE_SETTINGS}</strong>

@@ -56,11 +56,13 @@ if(Input::exists()){
 			}
 		} else
 		$location = 1;
+
+		$guests_view = $_POST['guests_view'] == '1' ? '1' : '0';
 	
         // Update Link location cache
         $cache->setCache('infractions_module_cache');
 		$cache->store('link_location', $location);
-		$cache->store('guests_view', $_POST['guests_view']);
+		$cache->store('guests_view', $guests_view);
 		
 		// Update config
 		$config_path = ROOT_PATH . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'Infractions' . DIRECTORY_SEPARATOR . 'config.php';
@@ -78,7 +80,7 @@ if(Input::exists()){
 					');' . PHP_EOL .
 					'$inf_config = array(' . PHP_EOL .
 					'    \'plugin\' => \'' . str_replace('\'', '\\\'', (!empty($_POST['plugin']) ? $_POST['plugin'] : $inf_config['plugin'])) . '\',' . PHP_EOL .
-					'    \'guests_view\' => \'' . str_replace('\'', '\\\'', $_POST['guests_view']) . '\',' . PHP_EOL .
+					'    \'guests_view\' => \'' . str_replace('\'', '\\\'', $guests_view) . '\',' . PHP_EOL .
 					');';
 				$file = fopen($config_path, 'w');
 				fwrite($file, $config);
