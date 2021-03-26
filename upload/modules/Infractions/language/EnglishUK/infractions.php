@@ -31,6 +31,8 @@ $language = array(
     'active' => 'Active',
     'no_infractions' => 'No infractions found.',
     'unknown' => 'Unknown',
+    'view_infractions' => 'View Infractions',
+    'guests_view' => 'Guests view Infractions?',
 	
     /*
      *  Staff Panel

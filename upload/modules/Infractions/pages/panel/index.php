@@ -59,7 +59,8 @@ if(Input::exists()){
 	
         // Update Link location cache
         $cache->setCache('infractions_module_cache');
-        $cache->store('link_location', $location);
+		$cache->store('link_location', $location);
+		$cache->store('guests_view', $_POST['guests_view']);
 		
 		// Update config
 		$config_path = ROOT_PATH . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'Infractions' . DIRECTORY_SEPARATOR . 'config.php';
@@ -77,6 +78,7 @@ if(Input::exists()){
 					');' . PHP_EOL .
 					'$inf_config = array(' . PHP_EOL .
 					'    \'plugin\' => \'' . str_replace('\'', '\\\'', (!empty($_POST['plugin']) ? $_POST['plugin'] : $inf_config['plugin'])) . '\',' . PHP_EOL .
+					'    \'guests_view\' => \'' . str_replace('\'', '\\\'', $_POST['guests_view']) . '\',' . PHP_EOL .
 					');';
 				$file = fopen($config_path, 'w');
 				fwrite($file, $config);
@@ -101,6 +103,7 @@ if(Input::exists()){
 					');' . PHP_EOL .
 					'$inf_config = array(' . PHP_EOL .
 					'    \'plugin\' => \'' . str_replace('\'', '\\\'', (!empty($_POST['plugin']) ? $_POST['plugin'] : 'litebans')) . '\',' . PHP_EOL .
+					'    \'guests_view\' => \'' . str_replace('\'', '\\\'', $_POST['guests_view']) . '\',' . PHP_EOL .
 					');';
 				$file = fopen($config_path, 'w');
 				fwrite($file, $config);
@@ -177,6 +180,8 @@ $smarty->assign(array(
 	'LINK_MORE' => $language->get('admin', 'page_link_more'),
 	'LINK_FOOTER' => $language->get('admin', 'page_link_footer'),
 	'LINK_NONE' => $language->get('admin', 'page_link_none'),
+	'GUESTS_VIEW' => $infractions_language->get('infractions', 'guests_view'),
+	'GUESTS_VIEW_VALUE' => (!empty($inf_config['guests_view']) ? Output::getClean($inf_config['guests_view']) : 0),
 	'ADDRESS' => $infractions_language->get('infractions', 'database_address'),
 	'ADDRESS_VALUE' => (!empty($inf_db['address']) ? Output::getClean($inf_db['address']) : ''),
 	'NAME' => $infractions_language->get('infractions', 'database_name'),

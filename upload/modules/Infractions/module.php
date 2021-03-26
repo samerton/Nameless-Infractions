@@ -40,6 +40,7 @@ class Infractions_Module extends Module {
 			
 			$group_permissions = json_decode($group->permissions, TRUE);
 			$group_permissions['admincp.infractions.settings'] = 1;
+			$group_permissions['infractions.view'] = 1;
 			
 			$group_permissions = json_encode($group_permissions);
 			$queries->update('groups', 2, array('permissions' => $group_permissions));
@@ -63,6 +64,7 @@ class Infractions_Module extends Module {
 	public function onPageLoad($user, $pages, $cache, $smarty, $navs, $widgets, $template){
 		// Permissions
 		PermissionHandler::registerPermissions('Infractions', array(
+			'infractions.view' => $this->_infractions_language->get('infractions', 'infractions') . ' &raquo; ' . $this->_infractions_language->get('infractions', 'view_infractions'),
 			'admincp.infractions.settings' => $this->_language->get('moderator', 'staff_cp') . ' &raquo; ' . $this->_infractions_language->get('infractions', 'infractions_settings')
 		));
 		
@@ -74,38 +76,46 @@ class Infractions_Module extends Module {
 		} else {
 			$link_location = $cache->retrieve('link_location');
 		}
-		
-		// Add link to navbar
-		$cache->setCache('navbar_order');
-		if(!$cache->isCached('infractions_order')){
-			$order = 14;
-			$cache->store('infractions_order', 14);
+		if (!$cache->isCached('guests_view')){
+			$guests_view = 0;
+			$cache->store('guests_view', 0);
 		} else {
-			$order = $cache->retrieve('infractions_order');
-		}
-		$cache->setCache('navbar_icons');
-		if(!$cache->isCached('infractions_icon'))
-			$icon = '';
-		else
-			$icon = $cache->retrieve('infractions_icon');
-
-		switch($link_location){
-			case 1:
-				// Navbar
-				$navs[0]->add('infractions', $this->_infractions_language->get('infractions', 'infractions'), URL::build('/infractions'), 'top', null, $order, $icon);
-			break;
-			case 2:
-				// "More" dropdown
-
-				$navs[0]->addItemToDropdown('more_dropdown', 'infractions', $this->_infractions_language->get('infractions', 'infractions'), URL::build('/infractions'), 'top', null, $icon, $order);
-			break;
-			case 3:
-				// Footer
-				$navs[0]->add('infractions', $this->_infractions_language->get('infractions', 'infractions'), URL::build('/infractions'), 'footer', null, $order, $icon);
-			break;
+			$guests_view = $cache->retrieve('guests_view');
 		}
 		
-		if(defined('BACK_END')){
+		if (!defined('BACK_END')) {
+			if(($user->isLoggedIn() && $user->hasPermission('infractions.view')) || (!$user->isLoggedIn() && $guests_view)){
+				// Add link to navbar
+				$cache->setCache('navbar_order');
+				if(!$cache->isCached('infractions_order')){
+					$order = 14;
+					$cache->store('infractions_order', 14);
+				} else {
+					$order = $cache->retrieve('infractions_order');
+				}
+				$cache->setCache('navbar_icons');
+				if(!$cache->isCached('infractions_icon'))
+					$icon = '';
+				else
+					$icon = $cache->retrieve('infractions_icon');
+
+				switch($link_location){
+					case 1:
+						// Navbar
+						$navs[0]->add('infractions', $this->_infractions_language->get('infractions', 'infractions'), URL::build('/infractions'), 'top', null, $order, $icon);
+					break;
+					case 2:
+						// "More" dropdown
+
+						$navs[0]->addItemToDropdown('more_dropdown', 'infractions', $this->_infractions_language->get('infractions', 'infractions'), URL::build('/infractions'), 'top', null, $icon, $order);
+					break;
+					case 3:
+						// Footer
+						$navs[0]->add('infractions', $this->_infractions_language->get('infractions', 'infractions'), URL::build('/infractions'), 'footer', null, $order, $icon);
+					break;
+				}
+			}
+		} else {
 			if($user->hasPermission('admincp.infractions.settings')){
 				$cache->setCache('panel_sidebar');
 				if(!$cache->isCached('infractions_order')){
