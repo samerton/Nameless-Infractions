@@ -19,7 +19,7 @@ class Infractions_Module extends Module {
 		
 		$name = 'Infractions';
 		$author = '<a href="https://samerton.me" target="_blank" rel="nofollow noopener">Samerton</a>';
-		$module_version = '1.2.0';
+		$module_version = '1.2.1';
 		$nameless_version = '2.0.0-pr9';
 		
 		parent::__construct($this, $name, $author, $module_version, $nameless_version);
@@ -67,7 +67,7 @@ class Infractions_Module extends Module {
 			'infractions.view' => $this->_infractions_language->get('infractions', 'infractions') . ' &raquo; ' . $this->_infractions_language->get('infractions', 'view_infractions'),
 			'admincp.infractions.settings' => $this->_language->get('moderator', 'staff_cp') . ' &raquo; ' . $this->_infractions_language->get('infractions', 'infractions_settings')
 		));
-		
+
 		// navigation link location
 		$cache->setCache('infractions_module_cache');
 		if(!$cache->isCached('link_location')){
@@ -84,7 +84,9 @@ class Infractions_Module extends Module {
 		}
 		
 		if (!defined('BACK_END')) {
-			if(($user->isLoggedIn() && $user->hasPermission('infractions.view')) || (!$user->isLoggedIn() && $guests_view)){
+			$groups = $user->isLoggedIn() ? $user->getGroups() : array();
+
+			if(($user->isLoggedIn() && ($user->hasPermission('infractions.view') || in_array(2, $groups))) || (!$user->isLoggedIn() && $guests_view)){
 				// Add link to navbar
 				$cache->setCache('navbar_order');
 				if(!$cache->isCached('infractions_order')){
