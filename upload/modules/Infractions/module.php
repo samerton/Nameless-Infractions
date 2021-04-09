@@ -68,6 +68,27 @@ class Infractions_Module extends Module {
 			'admincp.infractions.settings' => $this->_language->get('moderator', 'staff_cp') . ' &raquo; ' . $this->_infractions_language->get('infractions', 'infractions_settings')
 		));
 
+		// Permission check for admins - only temporary until group ID 2 is made into a super group
+		if ($user->isLoggedIn() && !$user->hasPermission('infractions.view')) {
+            $groups = $user->getGroups();
+
+            foreach ($groups as $group) {
+                if ($group->id == 2) {
+                    // Update main admin group permissions
+                    $queries = new Queries();
+                    $group = $queries->getWhere('groups', array('id', '=', 2));
+                    $group = $group[0];
+
+                    $group_permissions = json_decode($group->permissions, true);
+                    $group_permissions['infractions.view'] = 1;
+
+                    $group_permissions = json_encode($group_permissions);
+                    $queries->update('groups', 2, array('permissions' => $group_permissions));
+                    break;
+                }
+            }
+        }
+
 		// navigation link location
 		$cache->setCache('infractions_module_cache');
 		if(!$cache->isCached('link_location')){
@@ -84,9 +105,7 @@ class Infractions_Module extends Module {
 		}
 		
 		if (!defined('BACK_END')) {
-			$groups = $user->isLoggedIn() ? $user->getGroups() : array();
-
-			if(($user->isLoggedIn() && ($user->hasPermission('infractions.view') || in_array(2, $groups))) || (!$user->isLoggedIn() && $guests_view)){
+			if(($user->isLoggedIn() && ($user->hasPermission('infractions.view'))) || (!$user->isLoggedIn() && $guests_view)){
 				// Add link to navbar
 				$cache->setCache('navbar_order');
 				if(!$cache->isCached('infractions_order')){
