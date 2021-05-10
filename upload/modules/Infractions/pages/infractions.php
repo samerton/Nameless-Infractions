@@ -185,6 +185,8 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
                     break;
             }
 
+            $result->active = (($type_id == 1 || $type_id == 3)) ?  time() < (int)($result->until / 1000) : ((isset($result->active) && $result->active == 1) ? 0 : 1);
+
             $infractions_array[] = array(
                 'username' => Output::getClean($result->name),
                 'profile' => $users_array[$result->name]['profile'],
@@ -204,9 +206,9 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
                 'action_id' => $type_id,
                 'expires' => (($type_id == 1 || $type_id == 3) ? $timeago->inWords(date('d M Y, H:i', (int)($result->until / 1000)), $language->getTimeLanguage()) : null),
                 'expires_full' => (($type_id == 1 || $type_id == 3) ? date('d M Y, H:i', (int)($result->until / 1000)) : null),
-                'revoked' => ((isset($result->active) && $result->active == 1) ? 0 : 1),
+                'revoked' => !$result->active,
                 'revoked_full' => ((!isset($result->active) || $result->active == 0) ? $infractions_language->get('infractions', 'expired') : $infractions_language->get('infractions', 'active')),
-                'reason' => Output::getPurified($result->reason),
+                'reason' => preg_replace('(\xa7|&).', '', Output::getPurified($result->reason)),
                 'view_link' => URL::build('/infractions/' . Output::getClean($result->type) . '/' . $result->id)
             );
         }
