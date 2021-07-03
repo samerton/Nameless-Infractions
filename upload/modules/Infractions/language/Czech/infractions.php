@@ -32,8 +32,8 @@ $language = array(
     'active' => 'Aktivní',
     'no_infractions' => 'Nenalezeny žádné tresty.',
     'unknown' => 'Neznámé',
-    'view_infractions' => 'View Infractions',
-    'guests_view' => 'Guests view Infractions?',
+    'view_infractions' => 'Zobrazovat tresty',
+    'guests_view' => 'Mohou hosté vidět tresty?',
 	
     /*
      *  Staff Panel
