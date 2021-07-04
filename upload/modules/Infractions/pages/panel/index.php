@@ -163,6 +163,10 @@ $plugin_options = array(
 	array(
 		'name' => 'AdvancedBan',
 		'value' => 'advancedban'
+	),
+	array(
+		'name' => 'LibertyBans',
+		'value' => 'libertybans'
 	)
 );
 

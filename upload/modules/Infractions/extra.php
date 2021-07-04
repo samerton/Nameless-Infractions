@@ -10,8 +10,13 @@ $inf_extra = array(
         'warnings_table' => 'litebans_warnings',
         'history_table' => 'litebans_history'
     ),
-	'advancedban' => array(
-		'punishments_table' => 'Punishments',
-		'punishment_history_table' => 'PunishmentHistory'
-	)
+    'advancedban' => array(
+        'punishments_table' => 'Punishments',
+        'punishment_history_table' => 'PunishmentHistory'
+    ),
+    'libertybans' => array(
+        'active_table' => 'libertybans_simple_active',
+        'history_table' => 'libertybans_simple_history',
+        'name_table' => 'libertybans_names'
+    )
 );

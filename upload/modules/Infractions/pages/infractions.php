@@ -54,6 +54,11 @@ if(!isset($inf_db)) {
 require(ROOT_PATH . '/core/integration/uuid.php');
 require_once(ROOT_PATH . '/modules/Infractions/classes/Infractions.php');
 switch($inf_config['plugin']) {
+	case 'libertybans':
+		// Libertybans integration
+		require_once(ROOT_PATH . '/modules/Infractions/classes/LibertyBans.php');
+		$infractions = new LibertyBans($inf_db, $infractions_language);
+	break;
 	case 'litebans':
 		// Litebans integration
 		require_once(ROOT_PATH . '/modules/Infractions/classes/LiteBans.php');

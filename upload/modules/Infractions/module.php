@@ -19,7 +19,7 @@ class Infractions_Module extends Module {
 		
 		$name = 'Infractions';
 		$author = '<a href="https://samerton.me" target="_blank" rel="nofollow noopener">Samerton</a>';
-		$module_version = '1.2.2';
+		$module_version = '1.3.0';
 		$nameless_version = '2.0.0-pr10';
 		
 		parent::__construct($this, $name, $author, $module_version, $nameless_version);
