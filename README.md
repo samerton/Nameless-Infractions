@@ -3,6 +3,7 @@ The Infractions module for Nameless v2 allows you to display a list of ingame pu
 
 ### Supported Plugins
 - AdvancedBan
+- LibertyBans
 - LiteBans
 
 If you would like to request plugin support, please open an issue on [GitHub](https://github.com/samerton/Nameless-Infractions/issues).
