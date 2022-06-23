@@ -14,7 +14,7 @@ class BungeeAdminTools extends Infractions {
 	// Constructor
 	public function __construct($inf_db, $language, $cache) {
 		parent::__construct($inf_db, $language, $cache);
-		
+
 		// Force-set prefix to bat_
 		$this->_prefix = 'bat_';
 	}

@@ -28,7 +28,7 @@ abstract class Infractions {
         if($this->_db)
             return;
 
-        $this->_db = new DB_Custom($this->_db_details['address'], $this->_db_details['name'], $this->_db_details['username'], $this->_db_details['password'], $this->_db_details['port']);
+        $this->_db = DB::getCustomInstance($this->_db_details['address'], $this->_db_details['name'], $this->_db_details['username'], $this->_db_details['password'], $this->_db_details['port'], null, '');
     }
 
     // Order array of objects using created attribute
