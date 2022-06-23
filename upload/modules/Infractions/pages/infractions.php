@@ -76,14 +76,15 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
     $infractions_list = $infractions->listInfractions($p, 10);
 
     if(count($infractions_list)) {
+        $total = $infractions_list['total'];
+        unset($infractions_list['total']);
+
         // Pagination
         $paginator = new Paginator((isset($template_pagination) ? $template_pagination : array()));
-        $paginator->getLimited($infractions_list['total'], 10, $p);
+        $paginator->getLimited($infractions_list, 10, $p, $total);
         $pagination = $paginator->generate(7, URL::build('/infractions', true));
 
         $smarty->assign('PAGINATION', $pagination);
-
-        unset($infractions_list['total']);
 
         $infractions_array = array();
         $users_array = array();
