@@ -2,7 +2,7 @@
 /*
  *	Made by Samerton and Partydragen
  *  https://github.com/samerton/Nameless-Infractions
- *  NamelessMC version 2.0.0-pr6
+ *  NamelessMC version 2.0.0-pr13
  *
  *  License: MIT
  *
@@ -14,12 +14,10 @@ if($user->isLoggedIn()){
 	if(!$user->canViewStaffCP()){
 		// No
 		Redirect::to(URL::build('/'));
-		die();
 	}
 	if(!$user->isAdmLoggedIn()){
 		// Needs to authenticate
 		Redirect::to(URL::build('/panel/auth'));
-		die();
 	} else {
 		if(!$user->hasPermission('admincp.infractions.settings')){
 			require_once(ROOT_PATH . '/403.php');
@@ -29,7 +27,6 @@ if($user->isLoggedIn()){
 } else {
 	// Not logged in
 	Redirect::to(URL::build('/login'));
-	die();
 }
 
 define('PAGE', 'panel');
@@ -58,12 +55,12 @@ if(Input::exists()){
 		$location = 1;
 
 		$guests_view = $_POST['guests_view'] == '1' ? '1' : '0';
-	
+
         // Update Link location cache
         $cache->setCache('infractions_module_cache');
 		$cache->store('link_location', $location);
 		$cache->store('guests_view', $guests_view);
-		
+
 		// Update config
 		$config_path = ROOT_PATH . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'Infractions' . DIRECTORY_SEPARATOR . 'config.php';
 		if(file_exists($config_path)){
@@ -85,7 +82,7 @@ if(Input::exists()){
 				$file = fopen($config_path, 'w');
 				fwrite($file, $config);
 				fclose($file);
-				
+
 			} else {
 				// Permissions incorrect
 				$errors[] = $infractions_language->get('infractions', 'unable_to_write_infractions_config');
@@ -115,12 +112,11 @@ if(Input::exists()){
 				$errors[] = $infractions_language->get('admin', 'unable_to_write_infractions_config');
 			}
 		}
-		
+
 		if(!count($errors)){
 			// Redirect to refresh config values
 			Session::flash('infractions_success', $infractions_language->get('infractions', 'infractions_settings_updated_successfully'));
 			Redirect::to(URL::build('/panel/infractions'));
-			die();
 		}
 	} else {
 		// Invalid token
@@ -132,12 +128,12 @@ if(!isset($inf_db) && file_exists(ROOT_PATH . '/modules/Infractions/config.php')
 	require_once(ROOT_PATH . '/modules/Infractions/config.php');
 }
 
-// Retrive link_location from cache
+// Retrieve link_location from cache
 $cache->setCache('infractions_module_cache');
 $link_location = $cache->retrieve('link_location');
 
 // Load modules + template
-Module::loadPage($user, $pages, $cache, $smarty, array($navigation, $cc_nav, $mod_nav), $widgets);
+Module::loadPage($user, $pages, $cache, $smarty, [$navigation, $cc_nav, $staffcp_nav], $widgets, $template);
 
 if(Session::exists('infractions_success'))
 	$success = Session::flash('infractions_success');
@@ -201,9 +197,6 @@ $smarty->assign(array(
 	'TOKEN' => Token::get(),
 	'SUBMIT' => $language->get('general', 'submit')
 ));
-
-$page_load = microtime(true) - $start;
-define('PAGE_LOAD_TIME', str_replace('{x}', round($page_load, 3), $language->get('general', 'page_loaded_in')));
 
 $template->onPageLoad();
 

@@ -2,7 +2,7 @@
 /*
  *	Made by Samerton
  *  https://github.com/samerton/Nameless-Infractions
- *  NamelessMC version 2.0.0-pr10
+ *  NamelessMC version 2.0.0-pr13
  *
  *  License: MIT
  *
@@ -58,7 +58,7 @@ class LibertyBans extends Infractions {
                         'uuid' => $punishment->victim,
                         'reason' => $punishment->reason,
                         'banned_by_uuid' => $punishment->operator,
-                        'banned_by_name' => $punishment->operator == '00000000000000000000000000000000' ? 'CONSOLE' : $punishment->operator_name ?: $this->getNameFromUUID(strtolower($punishment->operator)),
+                        'banned_by_name' => $punishment->operator == '00000000000000000000000000000000' ? 'CONSOLE' : ($punishment->operator_name ?: $this->getNameFromUUID(strtolower($punishment->operator))),
                         'removed_by_uuid' => '',
                         'removed_by_name' => '',
                         'removed_by_date' => '',

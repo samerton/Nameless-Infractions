@@ -2,7 +2,7 @@
 /*
  *	Made by Samerton and Partydragen
  *  https://github.com/samerton/Nameless-Infractions
- *  NamelessMC version 2.0.0-pr7
+ *  NamelessMC version 2.0.0-pr13
  *
  *  License: MIT
  *
@@ -10,17 +10,16 @@
  */
 
 class Infractions_Module extends Module {
-	private $_infractions_language, $_language, $_cache;
+	private $_infractions_language, $_language;
 	
-	public function __construct($language, $infractions_language, $pages, $cache){
+	public function __construct($language, $infractions_language, $pages){
 		$this->_language = $language;
 		$this->_infractions_language = $infractions_language;
-		$this->_cache = $cache;
-		
+
 		$name = 'Infractions';
 		$author = '<a href="https://samerton.me" target="_blank" rel="nofollow noopener">Samerton</a>';
-		$module_version = '1.3.0';
-		$nameless_version = '2.0.0-pr10';
+		$module_version = '1.4.0';
+		$nameless_version = '2.0.0-pr13';
 		
 		parent::__construct($this, $name, $author, $module_version, $nameless_version);
 
@@ -31,19 +30,17 @@ class Infractions_Module extends Module {
 	
 	public function onInstall(){
 		// Install module
-		// Queries
-		$queries = new Queries();
 		try {
 			// Update main admin group permissions
-			$group = $queries->getWhere('groups', array('id', '=', 2));
-			$group = $group[0];
+			$group = DB::getInstance()->get('groups', array('id', '=', 2));
+			$group = $group->first();
 			
-			$group_permissions = json_decode($group->permissions, TRUE);
+			$group_permissions = json_decode($group->permissions, true);
 			$group_permissions['admincp.infractions.settings'] = 1;
 			$group_permissions['infractions.view'] = 1;
 			
 			$group_permissions = json_encode($group_permissions);
-			$queries->update('groups', 2, array('permissions' => $group_permissions));
+			DB::getInstance()->update('groups', 2, array('permissions' => $group_permissions));
 		} catch(Exception $e){
 			// Error
 		}
@@ -75,15 +72,14 @@ class Infractions_Module extends Module {
             foreach ($groups as $group) {
                 if ($group->id == 2) {
                     // Update main admin group permissions
-                    $queries = new Queries();
-                    $group = $queries->getWhere('groups', array('id', '=', 2));
-                    $group = $group[0];
+                    $group = DB::getInstance()->get('groups', array('id', '=', 2));
+                    $group = $group->first();
 
                     $group_permissions = json_decode($group->permissions, true);
                     $group_permissions['infractions.view'] = 1;
 
                     $group_permissions = json_encode($group_permissions);
-                    $queries->update('groups', 2, array('permissions' => $group_permissions));
+                    DB::getInstance()->update('groups', 2, array('permissions' => $group_permissions));
                     break;
                 }
             }
@@ -127,7 +123,6 @@ class Infractions_Module extends Module {
 					break;
 					case 2:
 						// "More" dropdown
-
 						$navs[0]->addItemToDropdown('more_dropdown', 'infractions', $this->_infractions_language->get('infractions', 'infractions'), URL::build('/infractions'), 'top', null, $icon, $order);
 					break;
 					case 3:
@@ -157,4 +152,9 @@ class Infractions_Module extends Module {
 		}
 			
 	}
+
+    public function getDebugInfo(): array {
+        // Nothing to do here (yet)
+        return [];
+    }
 }

@@ -2,7 +2,7 @@
 /*
  *	Made by Samerton and Partydragen
  *  https://github.com/samerton/Nameless-Infractions
- *  NamelessMC version 2.0.0-pr6
+ *  NamelessMC version 2.0.0-pr13
  *
  *  License: MIT
  *
@@ -38,11 +38,10 @@ require_once(ROOT_PATH . '/core/templates/frontend_init.php');
 if(isset($_GET['p'])){
     if(!is_numeric($_GET['p'])){
         Redirect::to(URL::build('/infractions'));
-        die();
     } else $p = $_GET['p'];
 } else $p = 1;
 
-$timeago = new Timeago(TIMEZONE);
+$timeago = new TimeAgo(TIMEZONE);
 
 if(!file_exists(ROOT_PATH . '/modules/Infractions/config.php')){
 	die('Please configure the Infractions module in the StaffCP first!');
@@ -51,7 +50,7 @@ require(ROOT_PATH . '/modules/Infractions/config.php');
 if(!isset($inf_db)) {
 	die('Please configure the Infractions module in the StaffCP first!');
 }
-require(ROOT_PATH . '/core/integration/uuid.php');
+
 require_once(ROOT_PATH . '/modules/Infractions/classes/Infractions.php');
 switch($inf_config['plugin']) {
 	case 'libertybans':
@@ -71,7 +70,6 @@ switch($inf_config['plugin']) {
 		break;
 	default:
 		die('Plugin not supported!');
-	break;
 }
 
 if(!isset($_GET['view']) && !isset($_GET['id'])){
@@ -80,7 +78,7 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
     if(count($infractions_list)) {
         // Pagination
         $paginator = new Paginator((isset($template_pagination) ? $template_pagination : array()));
-        $paginator->setValues($infractions_list['total'], 10, $p);
+        $paginator->getLimited($infractions_list['total'], 10, $p);
         $pagination = $paginator->generate(7, URL::build('/infractions', true));
 
         $smarty->assign('PAGINATION', $pagination);
@@ -97,14 +95,14 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
                 if($query_user->exists()){
                     $users_array[$result->name] = array(
                         'profile' => URL::build('/profile/' . Output::getClean($result->name)),
-                        'style' => $query_user->getGroupClass(),
+                        'style' => $query_user->getGroupStyle(),
                         'avatar' => $query_user->getAvatar()
                     );
                 } else {
                     $users_array[$result->name] = array(
                         'profile' => null,
                         'style' => null,
-                        'avatar' => Util::getAvatarFromUUID($result->uuid)
+                        'avatar' => AvatarSource::getAvatarFromUUID($result->uuid)
                     );
                 }
             }
@@ -113,30 +111,30 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
                 if($query_user->exists()){
                     $users_array[$result->banned_by_name] = array(
                         'profile' => URL::build('/profile/' . Output::getClean($result->banned_by_name)),
-                        'style' => $query_user->getGroupClass(),
+                        'style' => $query_user->getGroupStyle(),
                         'avatar' => $query_user->getAvatar()
                     );
                 } else {
                     $users_array[$result->banned_by_name] = array(
                         'profile' => null,
                         'style' => null,
-                        'avatar' => Util::getAvatarFromUUID($result->banned_by_uuid)
+                        'avatar' => AvatarSource::getAvatarFromUUID($result->banned_by_uuid)
                     );
                 }
             }
             if(isset($result->removed_by_name) && !isset($users_array[$result->removed_by_name])){
-                $query_user = new User($result->removed_by_name);
+                $query_user = new User($result->removed_by_name, 'username');
                 if($query_user->exists()){
                     $users_array[$result->removed_by_name] = array(
                         'profile' => URL::build('/profile/' . Output::getClean($result->removed_by_name)),
-                        'style' => $query_user->getGroupClass(),
+                        'style' => $query_user->getGroupStyle(),
                         'avatar' => $query_user->getAvatar()
                     );
                 } else {
                     $users_array[$result->removed_by_name] = array(
                         'profile' => null,
                         'style' => null,
-                        'avatar' => Util::getAvatarFromUUID($result->removed_by_uuid)
+                        'avatar' => AvatarSource::getAvatarFromUUID($result->removed_by_uuid)
                     );
                 }
             }
@@ -203,12 +201,12 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
                 'revoked_staff_member_link' => $users_array[$result->banned_by_name]['profile'],
                 'revoked_staff_member_style' => $users_array[$result->banned_by_name]['style'],
                 'revoked_staff_member_avatar' => $users_array[$result->banned_by_name]['avatar'],
-                'issued' => $timeago->inWords(date('d M Y, H:i', (int)($result->time / 1000)), $language->getTimeLanguage()),
-                'issued_full' => date('d M Y, H:i', (int)($result->time / 1000)),
+                'issued' => $timeago->inWords((int)($result->time / 1000), $language),
+                'issued_full' => date(DATE_FORMAT, (int)($result->time / 1000)),
                 'action' => $type,
                 'action_id' => $type_id,
-                'expires' => (($type_id == 1 || $type_id == 3) ? $timeago->inWords(date('d M Y, H:i', (int)($result->until / 1000)), $language->getTimeLanguage()) : null),
-                'expires_full' => (($type_id == 1 || $type_id == 3) ? date('d M Y, H:i', (int)($result->until / 1000)) : null),
+                'expires' => (($type_id == 1 || $type_id == 3) ? $timeago->inWords((int)($result->until / 1000), $language) : null),
+                'expires_full' => (($type_id == 1 || $type_id == 3) ? date(DATE_FORMAT, (int)($result->until / 1000)) : null),
                 'revoked' => ((isset($result->active) && $result->active == 1) ? 0 : 1),
                 'revoked_full' => ((!isset($result->active) || $result->active == 0) ? $infractions_language->get('infractions', 'expired') : $infractions_language->get('infractions', 'active')),
                 'reason' => Output::getPurified($result->reason),
@@ -244,10 +242,7 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
 }
 
 // Load modules + template
-Module::loadPage($user, $pages, $cache, $smarty, array($navigation, $cc_nav, $mod_nav), $widgets);
-
-$page_load = microtime(true) - $start;
-define('PAGE_LOAD_TIME', str_replace('{x}', round($page_load, 3), $language->get('general', 'page_loaded_in')));
+Module::loadPage($user, $pages, $cache, $smarty, [$navigation, $cc_nav, $staffcp_nav], $widgets, $template);
 
 $template->onPageLoad();
 	
