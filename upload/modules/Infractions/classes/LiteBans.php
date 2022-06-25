@@ -2,7 +2,7 @@
 /*
  *	Made by Samerton
  *  https://github.com/samerton/Nameless-Infractions
- *  NamelessMC version 2.0.0-pr7
+ *  NamelessMC version 2.0.0-pr13
  *
  *  License: MIT
  *
@@ -57,7 +57,7 @@ class LiteBans extends Infractions {
     }
 
     // List all infractions
-	public function listAll($page, $limit){
+	public function listAll($page, $limit): DB {
     	$start = ($page - 1) * $limit;
 
     	return $this->_db->query(
@@ -65,7 +65,8 @@ class LiteBans extends Infractions {
     		'(' . $this->getKicksQuery() . ') UNION ' .
     		'(' . $this->getMutesQuery() . ') UNION ' .
     		'(' . $this->getWarningsQuery() . ') ORDER BY `time` DESC LIMIT ?,?',
-		    array($start, $limit)
+		    array($start, $limit),
+		    true
 	    );
 	}
 

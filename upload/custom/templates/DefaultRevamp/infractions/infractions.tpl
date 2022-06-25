@@ -48,9 +48,9 @@
 
                             {if $infraction.action_id lte 4 || $infraction.action_id eq 6}
                                 {if $infraction.revoked == 1}
-									<span data-toggle="tooltip" title="{$infraction.expires_full}" class="badge badge-success">{$infraction.revoked_full}</span>
+									<span data-toggle="tooltip" title="{$infraction.expires_full}" class="ui green label">{$infraction.revoked_full}</span>
                                 {else}
-									<span data-toggle="tooltip" title="{$infraction.expires_full}" class="badge badge-danger">{$infraction.revoked_full}</span>
+									<span data-toggle="tooltip" title="{$infraction.expires_full}" class="ui red label">{$infraction.revoked_full}</span>
                                 {/if}
                             {/if}
 						</td>
