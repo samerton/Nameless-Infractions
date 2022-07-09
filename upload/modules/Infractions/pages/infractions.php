@@ -103,7 +103,7 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
                     $users_array[$result->name] = array(
                         'profile' => null,
                         'style' => null,
-                        'avatar' => AvatarSource::getAvatarFromUUID($result->uuid)
+                        'avatar' => AvatarSource::getAvatarFromUUID($result->removed_by_uuid ?? $result->removed_by_name)
                     );
                 }
             }
@@ -119,7 +119,7 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
                     $users_array[$result->banned_by_name] = array(
                         'profile' => null,
                         'style' => null,
-                        'avatar' => AvatarSource::getAvatarFromUUID($result->banned_by_uuid)
+                        'avatar' => AvatarSource::getAvatarFromUUID($result->removed_by_uuid ?? $result->removed_by_name)
                     );
                 }
             }
