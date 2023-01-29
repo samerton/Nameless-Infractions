@@ -135,7 +135,7 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
                     $users_array[$result->removed_by_name] = array(
                         'profile' => null,
                         'style' => null,
-                        'avatar' => AvatarSource::getAvatarFromUUID($result->removed_by_uuid ?? $result->removed_by_uuid)
+                        'avatar' => AvatarSource::getAvatarFromUUID($result->removed_by_uuid ?? $result->removed_by_name)
                     );
                 }
             }
