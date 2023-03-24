@@ -143,7 +143,7 @@ if(!isset($_GET['view']) && !isset($_GET['id'])){
             if(isset($result->removed_by_uuid) && isset($result->removed_by_name) && isset($result->removed_by_date)){
                 $removed_by_uuid = $result->removed_by_uuid;
                 $removed_by_name = $result->removed_by_name;
-                $removed_by_date = round(intval($result->removed_by_date) / 1000);
+                $removed_by_date = round(floatval($result->removed_by_date) / 1000);
                 $removed_by_link = $users_array[$result->removed_by_name]['profile'];
                 $removed_by_style = $users_array[$result->removed_by_name]['style'];
                 $removed_by_avatar = $users_array[$result->removed_by_name]['avatar'];
