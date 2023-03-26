@@ -55,9 +55,9 @@ class AdvancedBan extends Infractions {
 			        $staff_uuid = $punishment->operator;
 
 			        if(!isset($staff_usernames[$punishment->operator])){
-				        $staff_query = DB::getInstance()->query('SELECT uuid FROM nl2_users WHERE username = ?', array($punishment->operator));
+				        $staff_query = DB::getInstance()->query('SELECT identifier FROM nl2_users_integrations WHERE username = ?', array($punishment->operator));
 				        if($staff_query->count()){
-					        $staff_uuid = $staff_query->first()->uuid;
+					        $staff_uuid = $staff_query->first()->identifier;
 					        $staff_usernames[$punishment->operator] = $staff_uuid;
 				        }
 			        } else {
