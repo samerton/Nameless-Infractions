@@ -118,9 +118,9 @@ class LibertyBans extends Infractions {
                     h.victim_address,
                     no.name AS operator_name,
                     nv.name AS victim_name
-                FROM libertybans_simple_history h
-                LEFT JOIN libertybans_latest_names no ON h.operator = no.uuid
-                LEFT JOIN libertybans_latest_names nv ON h.victim_uuid = nv.uuid
+                FROM {$this->_extra['history_view']} h
+                LEFT JOIN {$this->_extra['names_view']} no ON h.operator = no.uuid
+                LEFT JOIN {$this->_extra['names_view']} nv ON h.victim_uuid = nv.uuid
                 WHERE h.victim_type IN (0, 1)
                 ORDER BY h.start DESC LIMIT ?,?
             SQL,
