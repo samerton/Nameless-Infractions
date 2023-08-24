@@ -15,8 +15,7 @@ $inf_extra = array(
         'punishment_history_table' => 'PunishmentHistory'
     ),
     'libertybans' => array(
-        'active_table' => 'libertybans_simple_active',
-        'history_table' => 'libertybans_simple_history',
-        'name_table' => 'libertybans_names'
+        'history_view' => 'libertybans_simple_history',
+        'names_view' => 'libertybans_latest_names',
     )
 );
