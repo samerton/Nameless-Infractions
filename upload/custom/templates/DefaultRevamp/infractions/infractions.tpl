@@ -34,7 +34,7 @@
 						<td><img style="max-height:30px; max-width:30px;" class="ui avatar image" src="{$infraction.staff_member_avatar}"> <a href="{if !empty($infraction.staff_member_link)}{$infraction.staff_member_link}{else}#{/if}" style="{$infraction.staff_member_style}">{$infraction.staff_member}</a></td>
 						<td><span data-toggle="tooltip" title="{$infraction.issued_full}">{$infraction.issued}</span></td>
 						<td>
-                            {if $infraction.action_id == 1 || $infraction.action_id == 2}
+                            {if in_array($infraction.action_id, [1, 2, 8, 9])}
 								<span class="ui red label">{$infraction.action}</span>
                             {elseif $infraction.action_id == 3 || $infraction.action_id == 4}
 								<span class="ui yellow label">{$infraction.action}</span>
@@ -46,7 +46,7 @@
 								<span class="ui label">{$infraction.action}</span>
                             {/if}
 
-                            {if $infraction.action_id lte 4 || $infraction.action_id eq 6}
+                            {if !in_array($infraction.action_id, [5, 7])}
                                 {if $infraction.revoked == 1}
 									<span data-toggle="tooltip" title="{$infraction.expires_full}" class="ui green label">{$infraction.revoked_full}</span>
                                 {else}
