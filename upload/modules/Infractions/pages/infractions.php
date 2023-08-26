@@ -135,7 +135,7 @@ if (!isset($_GET['view']) && !isset($_GET['id'])) {
                         $usersArray[$result->{$uuidKey}] = array(
                             'profile' => null,
                             'style' => null,
-                            'avatar' => AvatarSource::getAvatarFromUUID($result->{$uuidKey} ?? $result->{$nameKey})
+                            'avatar' => AvatarSource::getAvatarFromUUID($result->{$uuidKey})
                         );
                     }
                 }

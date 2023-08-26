@@ -2,9 +2,9 @@
 /*
  *	Made by Samerton
  *  https://github.com/samerton/Nameless-Infractions
- *  NamelessMC version 2.0.0-pr7
+ *  NamelessMC version 2.1.0
  *
- *  License: MIT
+ *  Licence: MIT
  *
  *  AdvancedBan class
  */
@@ -12,13 +12,13 @@
 class AdvancedBan extends Infractions {
 
     // Variables
-    protected $_extra;
+    protected array $_extra;
 
     // Constructor
     public function __construct($inf_db, $language) {
         parent::__construct($inf_db, $language);
 
-        if(file_exists(ROOT_PATH . '/modules/Infractions/extra.php'))
+        if (file_exists(ROOT_PATH . '/modules/Infractions/extra.php'))
             require_once(ROOT_PATH . '/modules/Infractions/extra.php');
         else {
             $inf_extra = array('advancedban');
@@ -32,37 +32,47 @@ class AdvancedBan extends Infractions {
         $this->_extra = $inf_extra['advancedban'];
     }
 
-    // Retrieve a list of all infractions, either from cache or database
-    public function listInfractions($page, $limit){
+    /**
+     * Retrieve a list of all infractions, either from cache or database
+     * @param int $page
+     * @param int $limit
+     * @return array
+     */
+    public function listInfractions(int $page, int $limit): array {
         // Cached?
         $cache = $this->_cache;
         $cache->setCache('infractions_infractions');
-        if($cache->isCached('infractions' . $page)){
+        if ($cache->isCached('infractions' . $page) && false) {
             $mapped_punishments = $cache->retrieve('infractions' . $page);
         } else {
             $this->initDB();
 
-            $total = $this->getTotal()->first()->total;
+            $total = $this->getTotal();
             $infractions = $this->listAll($page, $limit)->results();
 
-	        $mapped_punishments = array();
-	        $staff_usernames = array();
+	        $mapped_punishments = [];
+	        $staff_usernames = [];
 
 	        $mapped_punishments['total'] = $total;
 
-	        if(count($infractions)){
-		        foreach($infractions as $punishment){
+	        if (count($infractions)) {
+		        foreach ($infractions as $punishment) {
 			        $staff_uuid = $punishment->operator;
 
-			        if(!isset($staff_usernames[$punishment->operator])){
-				        $staff_query = DB::getInstance()->query('SELECT identifier FROM nl2_users_integrations WHERE username = ?', array($punishment->operator));
-				        if($staff_query->count()){
+			        if (!isset($staff_usernames[$punishment->operator])) {
+				        $staff_query = DB::getInstance()->query(
+                            'SELECT identifier FROM nl2_users_integrations WHERE username = ?',
+                            [$punishment->operator]
+                        );
+				        if ($staff_query->count()) {
 					        $staff_uuid = $staff_query->first()->identifier;
 					        $staff_usernames[$punishment->operator] = $staff_uuid;
 				        }
 			        } else {
 				        $staff_uuid = $staff_usernames[$punishment->operator];
 			        }
+
+                    $type = $this->mapType($punishment->punishmentType);
 
 			        $mapped_punishments[] = (object) array(
 				        'id' => $punishment->id,
@@ -74,11 +84,11 @@ class AdvancedBan extends Infractions {
 				        'removed_by_uuid' => '',
 				        'removed_by_name' => '',
 				        'removed_by_date' => '',
-				        'time' => $punishment->start,
-				        'until' => $punishment->end > 0 ? $punishment->end : null,
-				        'ipban' => '',
+				        'time' => $punishment->start / 1000,
+				        'until' => $punishment->end > 0 ? ($punishment->end / 1000) : null,
+				        'ipban' => $type === 'ipban',
 				        'active' => $punishment->pstart ? 1 : 0,
-				        'type' => $this->mapType($punishment->punishmentType)
+				        'type' => $type,
 			        );
 		        }
 	        }
@@ -99,11 +109,14 @@ class AdvancedBan extends Infractions {
 	    );
 	}
 
-    // Get total rows
-	protected function getTotal(){
+    /**
+     * Retrieve total number of infractions
+     * @return int
+     */
+	protected function getTotal(): int {
     	return $this->_db->query(
-    		'SELECT (SELECT COUNT(*) FROM ' . $this->_extra['punishment_history_table'] . ') AS total', array()
-	    );
+    		'SELECT (SELECT COUNT(*) FROM ' . $this->_extra['punishment_history_table'] . ') AS total'
+	    )->first()->total;
 	}
 
 	// Get bans query
@@ -119,9 +132,11 @@ class AdvancedBan extends Infractions {
     	switch($type){
 		    case 'BAN':
 		    case 'TEMP_BAN':
-		    case 'IP_BAN':
-		    case 'TEMP_IP_BAN':
 		    	return 'ban';
+
+            case 'IP_BAN':
+            case 'TEMP_IP_BAN':
+                return 'ipban';
 
 		    case 'KICK':
 		    	return 'kick';
