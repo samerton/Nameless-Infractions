@@ -54,7 +54,7 @@ if(Input::exists()){
 		} else
 		$location = 1;
 
-		$guests_view = $_POST['guests_view'] == '1' ? '1' : '0';
+		$guests_view = $_POST['guests_view'] == 'on' ? '1' : '0';
 
         // Update Link location cache
         $cache->setCache('infractions_module_cache');
@@ -131,6 +131,7 @@ if(!isset($inf_db) && file_exists(ROOT_PATH . '/modules/Infractions/config.php')
 // Retrieve link_location from cache
 $cache->setCache('infractions_module_cache');
 $link_location = $cache->retrieve('link_location');
+$guests_view = $cache->retrieve('guests_view');
 
 // Load modules + template
 Module::loadPage($user, $pages, $cache, $smarty, [$navigation, $cc_nav, $staffcp_nav], $widgets, $template);
@@ -183,7 +184,7 @@ $smarty->assign(array(
 	'LINK_FOOTER' => $language->get('admin', 'page_link_footer'),
 	'LINK_NONE' => $language->get('admin', 'page_link_none'),
 	'GUESTS_VIEW' => $infractions_language->get('infractions', 'guests_view'),
-	'GUESTS_VIEW_VALUE' => (!empty($inf_config['guests_view']) ? Output::getClean($inf_config['guests_view']) : 0),
+	'GUESTS_VIEW_VALUE' => $guests_view ?? 0,
 	'ADDRESS' => $infractions_language->get('infractions', 'database_address'),
 	'ADDRESS_VALUE' => (!empty($inf_db['address']) ? Output::getClean($inf_db['address']) : ''),
 	'NAME' => $infractions_language->get('infractions', 'database_name'),

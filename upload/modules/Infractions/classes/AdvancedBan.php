@@ -42,7 +42,7 @@ class AdvancedBan extends Infractions {
         // Cached?
         $cache = $this->_cache;
         $cache->setCache('infractions_infractions');
-        if ($cache->isCached('infractions' . $page) && false) {
+        if ($cache->isCached('infractions' . $page)) {
             $mapped_punishments = $cache->retrieve('infractions' . $page);
         } else {
             $this->initDB();
