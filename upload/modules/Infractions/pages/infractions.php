@@ -200,19 +200,35 @@ if (!isset($_GET['view']) && !isset($_GET['id'])) {
                     break;
             }
 
+            function getAvatar($username) {
+                if($username ==="CONSOLE"){
+                    return 'https://lh3.googleusercontent.com/d/1-b7lnm2z5xv7CPiSXFUWh15eraNz1btG';
+                }
+                $checkerApiUrl = 'https://api.ashcon.app/mojang/v2/user/' . $username;
+
+                $response = @file_get_contents($checkerApiUrl);
+                $responseData = json_decode($response, true);
+
+                if (isset($responseData['error'])) {
+                    return 'https://lh3.googleusercontent.com/d/1kZOt-mgaEr_nwc5vITMiwJaGR4fxvewB';
+                }
+
+                return 'https://cravatar.eu/avatar/' . $username;
+            }
+
             $infractionsArray[] = [
                 'username' => Output::getClean($result->name),
                 'profile' => $usersArray[$result->uuid]['profile'],
                 'username_style' => $usersArray[$result->uuid]['style'],
-                'avatar' => $usersArray[$result->uuid]['avatar'],
+                'avatar' => getAvatar(Output::getClean($result->name)),
                 'staff_member' => Output::getClean($result->banned_by_name),
                 'staff_member_link' => $usersArray[$result->banned_by_uuid]['profile'],
                 'staff_member_style' => $usersArray[$result->banned_by_uuid]['style'],
-                'staff_member_avatar' => $usersArray[$result->banned_by_uuid]['avatar'],
+                'staff_member_avatar' => getAvatar(Output::getClean($result->banned_by_name)),
                 'revoked_staff_member' => Output::getClean($result->removed_by_name),
                 'revoked_staff_member_link' => $usersArray[$result->removed_by_uuid]['profile'],
                 'revoked_staff_member_style' => $usersArray[$result->removed_by_uuid]['style'],
-                'revoked_staff_member_avatar' => $usersArray[$result->removed_by_uuid]['avatar'],
+                'revoked_staff_member_avatar' => getAvatar(Output::getClean($result->removed_by_name)),
                 'issued' => $timeago->inWords($result->time, $language),
                 'issued_full' => date(DATE_FORMAT, $result->time),
                 'action' => $type,
