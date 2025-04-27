@@ -9,7 +9,7 @@ The Infractions module for Nameless v2 allows you to display a list of ingame pu
 If you would like to request plugin support, please open an issue on [GitHub](https://github.com/samerton/Nameless-Infractions/issues).
 
 ### Requirements
-- NamelessMC version 2.1.0
+- NamelessMC version 2.2.1+
 - One of the previously mentioned supported plugins installed and configured to use MySQL
 
 ### Installation
