@@ -12,8 +12,8 @@
 					<col span="1" style="width: 15%;">
 					<col span="1" style="width: 15%">
 					<col span="1" style="width: 20%">
-					<col span="1" style="width: 25%">
-					<col span="1" style="width: 10%">
+					<col span="1" style="width: 35%">
+					{* <col span="1" style="width: 10%"> *}
 				</colgroup>
 
 				<thead>
@@ -23,7 +23,7 @@
 					<th>{$ISSUED}</th>
 					<th>{$ACTION}</th>
 					<th>{$REASON}</th>
-					<th></th>
+					{* <th></th> *}
 				</tr>
 				</thead>
 
@@ -55,7 +55,7 @@
                             {/if}
 						</td>
 						<td>{$infraction.reason}</td>
-						<td><a href="{$infraction.view_link}" class="ui small blue button">{$VIEW} &raquo;</a></td>
+						{* <td><a href="{$infraction.view_link}" class="ui small blue button">{$VIEW} &raquo;</a></td> *}
 					</tr>
                 {/foreach}
 				</tbody>
